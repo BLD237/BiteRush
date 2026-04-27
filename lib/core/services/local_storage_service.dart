@@ -112,7 +112,8 @@ class _SharedPreferencesStore implements _KeyValueStore {
       _preferences.setString(key, value);
 
   @override
-  Future<bool> setBool(String key, bool value) => _preferences.setBool(key, value);
+  Future<bool> setBool(String key, bool value) =>
+      _preferences.setBool(key, value);
 
   @override
   Future<bool> setInt(String key, int value) => _preferences.setInt(key, value);
