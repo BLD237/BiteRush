@@ -72,15 +72,7 @@ class _SignupPageState extends State<SignupPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const SizedBox(height: 20),
-                  _SocialPrimaryButton(
-                    label: 'Sign up with Google',
-                    icon: Icons.g_mobiledata_rounded,
-                    onPressed: () {},
-                  ),
-                  const SizedBox(height: 14),
-                  const _DividerLabel(label: 'or sign up with'),
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 40),
                   Form(
                     key: _formKey,
                     child: Column(
@@ -201,6 +193,14 @@ class _SignupPageState extends State<SignupPage> {
                         _PrimaryActionButton(
                           label: 'Signup',
                           onPressed: _submit,
+                        ),
+                        const SizedBox(height: 14),
+                        const _DividerLabel(label: 'or sign up with'),
+                        const SizedBox(height: 14),
+                        _SocialPrimaryButton(
+                          label: 'Sign up with Google',
+                          iconAsset: 'assets/icons/google.png',
+                          onPressed: () {},
                         ),
                       ],
                     ),
@@ -367,12 +367,12 @@ class _PrimaryActionButton extends StatelessWidget {
 class _SocialPrimaryButton extends StatelessWidget {
   const _SocialPrimaryButton({
     required this.label,
-    required this.icon,
+    required this.iconAsset,
     required this.onPressed,
   });
 
   final String label;
-  final IconData icon;
+  final String iconAsset;
   final VoidCallback onPressed;
 
   @override
@@ -387,7 +387,12 @@ class _SocialPrimaryButton extends StatelessWidget {
           side: const BorderSide(color: Color(0xFFE1E6F8)),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
-        icon: Icon(icon, color: Colors.black87),
+        icon: Image.asset(
+          iconAsset,
+          width: 18,
+          height: 18,
+          fit: BoxFit.contain,
+        ),
         label: Text(
           label,
           style: const TextStyle(
