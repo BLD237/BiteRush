@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/core/constants/app_colors.dart';
-import 'package:food_delivery/features/auth/presentation/pages/login_page.dart';
+import 'package:go_router/go_router.dart';
+import 'package:food_delivery/core/routes/app_router.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -19,9 +20,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   void _submit() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => const LoginPage()),
-    );
+    context.go(AppRoutes.login);
   }
 
   @override
@@ -33,7 +32,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            }
+          },
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
         ),
         title: const Text(
@@ -113,7 +116,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         style: TextStyle(color: Colors.black54, fontSize: 12),
                       ),
                       TextButton(
-                        onPressed: () => Navigator.of(context).maybePop(),
+                        onPressed: () {
+                          if (context.canPop()) {
+                            context.pop();
+                          }
+                        },
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,

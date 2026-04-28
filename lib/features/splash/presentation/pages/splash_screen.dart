@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery/core/constants/app_assets.dart';
 import 'package:food_delivery/core/constants/app_colors.dart';
 import 'package:food_delivery/core/providers/app_startup_provider.dart';
-import 'package:food_delivery/features/auth/presentation/pages/login_page.dart';
-import 'package:food_delivery/features/home/presentation/pages/home_page.dart';
-import 'package:food_delivery/features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:go_router/go_router.dart';
+import 'package:food_delivery/core/routes/app_router.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -149,22 +148,20 @@ class _SplashScreenState extends State<SplashScreen>
       }
 
       final destination = startup.destination;
-      final Widget nextPage;
 
       switch (destination) {
         case AppStartDestination.onboarding:
-          nextPage = const OnboardingPage();
+          context.go(AppRoutes.onboarding);
+          return;
         case AppStartDestination.login:
-          nextPage = const LoginPage();
+          context.go(AppRoutes.login);
+          return;
         case AppStartDestination.home:
-          nextPage = const HomePage();
+          context.go(AppRoutes.home);
+          return;
         case null:
           return;
       }
-
-      Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute<void>(builder: (_) => nextPage));
     });
   }
 
@@ -249,6 +246,7 @@ class _SplashScreenState extends State<SplashScreen>
                         _subtitleText.substring(0, _subtitleVisibleCharacters),
                         textAlign: TextAlign.center,
                         style: TextStyle(
+                          // ignore: deprecated_member_use
                           color: AppColors.splashText.withOpacity(0.96),
                           fontSize: 18,
                           height: 1,

@@ -1,0 +1,67 @@
+name: Flutter CI
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+      - v1-develope
+  pull_request:
+    branches:
+      - master
+      - dev
+      - v1-develope
+
+jobs:
+  analyze_and_test:
+    name: Analyze and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Check codebase structure
+        run: |
+          set -euo pipefail
+
+          while IFS= read -r file; do
+            case "$file" in
+              lib/main.dart)
+                ;;
+              lib/core/constants/*.dart)
+                ;;
+              lib/core/providers/*.dart)
+                ;;
+              lib/core/services/*.dart)
+                ;;
+              lib/features/*/presentation/pages/*.dart)
+                ;;
+              lib/features/*/presentation/providers/*.dart)
+                ;;
+              test/*.dart|test/**/*.dart)
+                ;;
+              *)
+                echo "Unexpected Dart file location: $file"
+                exit 1
+                ;;
+            esac
+          done < <(find lib test -type f -name '*.dart' | sort)
+
+      - name: Format check
+        run: dart format --set-exit-if-changed .
+
+      - name: Lint check
+        run: flutter analyze --fatal-infos
+
+      - name: Run tests
+        run: flutter test

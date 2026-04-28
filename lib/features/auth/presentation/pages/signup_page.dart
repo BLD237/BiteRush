@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/core/constants/app_colors.dart';
-import 'package:food_delivery/features/auth/presentation/pages/login_page.dart';
-import 'package:food_delivery/features/auth/presentation/pages/verify_email_page.dart';
+import 'package:go_router/go_router.dart';
+import 'package:food_delivery/core/routes/app_router.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -33,10 +33,7 @@ class _SignupPageState extends State<SignupPage> {
     if (!(_formKey.currentState?.validate() ?? false)) {
       return;
     }
-
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute<void>(builder: (_) => const VerifyEmailPage()));
+    context.push(AppRoutes.verify);
   }
 
   @override
@@ -215,11 +212,7 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute<void>(
-                              builder: (_) => const LoginPage(),
-                            ),
-                          );
+                          context.go(AppRoutes.login);
                         },
                         child: const Text(
                           'Sign in here',
