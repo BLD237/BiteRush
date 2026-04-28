@@ -60,8 +60,8 @@ jobs:
       - name: Format check
         run: dart format --set-exit-if-changed .
 
-      - name: Analyze
-        run: flutter analyze
+      - name: Lint check
+        run: flutter analyze --fatal-infos
 
       - name: Run tests
         run: flutter test
