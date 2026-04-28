@@ -127,6 +127,7 @@ class _OnboardingViewState extends State<_OnboardingView> {
                               return;
                             }
 
+                            // ignore: use_build_context_synchronously
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute<void>(
                                 builder: (_) => const LoginPage(),
@@ -195,6 +196,7 @@ class _OnboardingViewState extends State<_OnboardingView> {
                                         width: 58,
                                         height: 6,
                                         decoration: BoxDecoration(
+                                          // ignore: deprecated_member_use
                                           color: item.accent.withOpacity(0.95),
                                           borderRadius: BorderRadius.circular(
                                             999,

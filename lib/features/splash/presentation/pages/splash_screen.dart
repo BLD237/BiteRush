@@ -249,6 +249,7 @@ class _SplashScreenState extends State<SplashScreen>
                         _subtitleText.substring(0, _subtitleVisibleCharacters),
                         textAlign: TextAlign.center,
                         style: TextStyle(
+                          // ignore: deprecated_member_use
                           color: AppColors.splashText.withOpacity(0.96),
                           fontSize: 18,
                           height: 1,
