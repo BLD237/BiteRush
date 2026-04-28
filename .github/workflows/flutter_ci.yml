@@ -30,6 +30,33 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Check codebase structure
+        run: |
+          set -euo pipefail
+
+          while IFS= read -r file; do
+            case "$file" in
+              lib/main.dart)
+                ;;
+              lib/core/constants/*.dart)
+                ;;
+              lib/core/providers/*.dart)
+                ;;
+              lib/core/services/*.dart)
+                ;;
+              lib/features/*/presentation/pages/*.dart)
+                ;;
+              lib/features/*/presentation/providers/*.dart)
+                ;;
+              test/*.dart|test/**/*.dart)
+                ;;
+              *)
+                echo "Unexpected Dart file location: $file"
+                exit 1
+                ;;
+            esac
+          done < <(find lib test -type f -name '*.dart' | sort)
+
       - name: Format check
         run: dart format --set-exit-if-changed .
 
