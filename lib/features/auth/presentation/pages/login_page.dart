@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/core/constants/app_colors.dart';
 import 'package:food_delivery/core/providers/app_startup_provider.dart';
-import 'package:food_delivery/features/auth/presentation/pages/forgot_password_page.dart';
-import 'package:food_delivery/features/auth/presentation/pages/signup_page.dart';
-import 'package:food_delivery/features/home/presentation/pages/home_page.dart';
+import 'package:go_router/go_router.dart';
+import 'package:food_delivery/core/routes/app_router.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -37,9 +36,7 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => const HomePage()),
-    );
+    context.go(AppRoutes.home);
   }
 
   @override
@@ -135,11 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute<void>(
-                                    builder: (_) => const ForgotPasswordPage(),
-                                  ),
-                                );
+                                context.push(AppRoutes.forgot);
                               },
                               style: TextButton.styleFrom(
                                 padding: EdgeInsets.zero,
@@ -182,11 +175,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute<void>(
-                              builder: (_) => const SignupPage(),
-                            ),
-                          );
+                          context.push(AppRoutes.signup);
                         },
                         child: const Text(
                           'Sign up here',

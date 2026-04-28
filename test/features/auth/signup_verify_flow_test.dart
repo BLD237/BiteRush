@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:food_delivery/features/auth/presentation/pages/signup_page.dart';
@@ -16,7 +17,25 @@ void main() {
 
     final media = MediaQuery(
       data: const MediaQueryData(size: Size(1080, 1920), textScaleFactor: 0.85),
-      child: const MaterialApp(home: SignupPage()),
+      child: MaterialApp.router(
+        routerConfig: GoRouter(
+          initialLocation: '/signup',
+          routes: [
+            GoRoute(
+              path: '/signup',
+              builder: (context, state) => const SignupPage(),
+            ),
+            GoRoute(
+              path: '/verify',
+              builder: (context, state) => const VerifyEmailPage(),
+            ),
+            GoRoute(
+              path: '/login',
+              builder: (context, state) => const LoginPage(),
+            ),
+          ],
+        ),
+      ),
     );
 
     await tester.pumpWidget(media);

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery/core/constants/app_assets.dart';
 import 'package:food_delivery/core/constants/app_colors.dart';
 import 'package:food_delivery/core/providers/app_startup_provider.dart';
-import 'package:food_delivery/features/auth/presentation/pages/login_page.dart';
 import 'package:food_delivery/features/onboarding/presentation/providers/onboarding_provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:food_delivery/core/routes/app_router.dart';
 import 'package:provider/provider.dart';
 
 class OnboardingPage extends StatelessWidget {
@@ -69,14 +70,13 @@ class _OnboardingViewState extends State<_OnboardingView> {
         curve: Curves.easeOutCubic,
       );
     } else {
+      final router = GoRouter.of(context);
       await context.read<AppStartupProvider>().markOnboardingComplete();
       if (!mounted) {
         return;
       }
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute<void>(builder: (_) => const LoginPage()),
-      );
+      router.go(AppRoutes.login);
     }
   }
 
@@ -120,6 +120,7 @@ class _OnboardingViewState extends State<_OnboardingView> {
                         ),
                         TextButton(
                           onPressed: () async {
+                            final router = GoRouter.of(context);
                             await context
                                 .read<AppStartupProvider>()
                                 .markOnboardingComplete();
@@ -127,12 +128,7 @@ class _OnboardingViewState extends State<_OnboardingView> {
                               return;
                             }
 
-                            // ignore: use_build_context_synchronously
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute<void>(
-                                builder: (_) => const LoginPage(),
-                              ),
-                            );
+                            router.go(AppRoutes.login);
                           },
                           child: const Text(
                             'Skip',

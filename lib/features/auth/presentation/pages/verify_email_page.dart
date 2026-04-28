@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/core/constants/app_colors.dart';
-import 'package:food_delivery/features/auth/presentation/pages/login_page.dart';
+import 'package:go_router/go_router.dart';
+import 'package:food_delivery/core/routes/app_router.dart';
 
 class VerifyEmailPage extends StatefulWidget {
   const VerifyEmailPage({super.key});
@@ -24,9 +25,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
   }
 
   void _submit() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => const LoginPage()),
-    );
+    context.go(AppRoutes.login);
   }
 
   @override

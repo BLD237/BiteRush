@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:food_delivery/core/constants/app_colors.dart';
 import 'package:food_delivery/core/providers/app_startup_provider.dart';
-import 'package:food_delivery/features/splash/presentation/pages/splash_screen.dart';
+import 'package:food_delivery/core/routes/app_router.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => AppStartupProvider()..initialize(),
-      child: MaterialApp(
+      child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         title: 'BiteRush',
         theme: ThemeData(
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: AppColors.background,
           useMaterial3: true,
         ),
-        home: const SplashScreen(),
+        routerConfig: appRouter,
       ),
     );
   }

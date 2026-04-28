@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,7 +22,21 @@ void main() {
       data: const MediaQueryData(size: Size(1080, 1920), textScaleFactor: 0.75),
       child: ChangeNotifierProvider<AppStartupProvider>.value(
         value: provider,
-        child: const MaterialApp(home: OnboardingPage()),
+        child: MaterialApp.router(
+          routerConfig: GoRouter(
+            initialLocation: '/onboarding',
+            routes: [
+              GoRoute(
+                path: '/onboarding',
+                builder: (context, state) => const OnboardingPage(),
+              ),
+              GoRoute(
+                path: '/login',
+                builder: (context, state) => const LoginPage(),
+              ),
+            ],
+          ),
+        ),
       ),
     );
 
