@@ -1,81 +1,104 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/core/constants/app_colors.dart';
-import 'package:food_delivery/core/providers/app_startup_provider.dart';
-import 'package:food_delivery/features/auth/presentation/pages/forgot_password_page.dart';
-import 'package:food_delivery/features/auth/presentation/pages/signup_page.dart';
-import 'package:food_delivery/features/home/presentation/pages/home_page.dart';
-import 'package:provider/provider.dart';
+import 'package:food_delivery/features/auth/presentation/pages/login_page.dart';
+import 'package:food_delivery/features/auth/presentation/pages/verify_email_page.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignupPage> createState() => _SignupPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _keepSignedIn = true;
+  final TextEditingController _fullName = TextEditingController();
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+  final TextEditingController _confirmPassword = TextEditingController();
+  bool _acceptTerms = false;
   bool _obscurePassword = true;
+  bool _obscureConfirm = true;
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    _fullName.dispose();
+    _email.dispose();
+    _password.dispose();
+    _confirmPassword.dispose();
     super.dispose();
   }
 
-  Future<void> _submit() async {
+  void _submit() {
     if (!(_formKey.currentState?.validate() ?? false)) {
       return;
     }
 
-    await context.read<AppStartupProvider>().setLoggedIn(true);
-    if (!mounted) {
-      return;
-    }
-
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => const HomePage()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => const VerifyEmailPage()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFCF8FB),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFFCF8FB),
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).maybePop(),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+        ),
+        title: const Text(
+          'Signup',
+          style: TextStyle(
+            color: Colors.black87,
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        centerTitle: true,
+        foregroundColor: Colors.black87,
+      ),
       body: SafeArea(
         child: Align(
           alignment: Alignment.topCenter,
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+            padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 420),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const SizedBox(height: 60),
-                  const _ScreenTitle(
-                    title: 'Login',
-                    subtitle: 'Welcome back! Please enter your details.',
-                  ),
                   const SizedBox(height: 20),
                   _SocialPrimaryButton(
-                    label: 'Sign in with Google',
+                    label: 'Sign up with Google',
                     icon: Icons.g_mobiledata_rounded,
                     onPressed: () {},
                   ),
                   const SizedBox(height: 14),
-                  const _DividerLabel(label: 'or sign in with'),
+                  const _DividerLabel(label: 'or sign up with'),
                   const SizedBox(height: 14),
                   Form(
                     key: _formKey,
                     child: Column(
                       children: [
                         _FloatingField(
-                          controller: _emailController,
+                          controller: _fullName,
+                          label: 'Full Name',
+                          hint: 'Becca Ade',
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Enter your full name';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        _FloatingField(
+                          controller: _email,
                           label: 'Email Address',
                           hint: 'Rhebek@gmail.com',
                           keyboardType: TextInputType.emailAddress,
@@ -91,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 12),
                         _FloatingField(
-                          controller: _passwordController,
+                          controller: _password,
                           label: 'Password',
                           hint: '••••••••',
                           obscureText: _obscurePassword,
@@ -109,20 +132,47 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Enter your password';
+                            if (value == null || value.length < 6) {
+                              return 'Enter a password of at least 6 characters';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        _FloatingField(
+                          controller: _confirmPassword,
+                          label: 'Confirm Password',
+                          hint: '••••••••',
+                          obscureText: _obscureConfirm,
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _obscureConfirm = !_obscureConfirm;
+                              });
+                            },
+                            icon: Icon(
+                              _obscureConfirm
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
+                              color: Colors.black38,
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value != _password.text) {
+                              return 'Passwords do not match';
                             }
                             return null;
                           },
                         ),
                         const SizedBox(height: 8),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Checkbox(
-                              value: _keepSignedIn,
+                              value: _acceptTerms,
                               onChanged: (value) {
                                 setState(() {
-                                  _keepSignedIn = value ?? false;
+                                  _acceptTerms = value ?? false;
                                 });
                               },
                               activeColor: AppColors.primary,
@@ -133,40 +183,23 @@ class _LoginPageState extends State<LoginPage> {
                               visualDensity: VisualDensity.compact,
                             ),
                             const Expanded(
-                              child: Text(
-                                'Keep me signed in',
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute<void>(
-                                    builder: (_) => const ForgotPasswordPage(),
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 12),
+                                child: Text(
+                                  'By Creating an Account, i accept Hiring Hub terms of Use and Privacy Policy',
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 12,
+                                    height: 1.35,
                                   ),
-                                );
-                              },
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
-                              child: const Text(
-                                'Forgot Password?',
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 8),
                         _PrimaryActionButton(
-                          label: 'Login',
+                          label: 'Signup',
                           onPressed: _submit,
                         ),
                       ],
@@ -177,19 +210,19 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        "Don't have an Account? ",
+                        'Have an Account? ',
                         style: TextStyle(color: Colors.black54, fontSize: 12),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(
+                          Navigator.of(context).pushReplacement(
                             MaterialPageRoute<void>(
-                              builder: (_) => const SignupPage(),
+                              builder: (_) => const LoginPage(),
                             ),
                           );
                         },
                         child: const Text(
-                          'Sign up here',
+                          'Sign in here',
                           style: TextStyle(
                             color: AppColors.primary,
                             fontSize: 12,
@@ -205,41 +238,6 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _ScreenTitle extends StatelessWidget {
-  const _ScreenTitle({required this.title, required this.subtitle});
-
-  final String title;
-  final String subtitle;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          textAlign: TextAlign.center,
-          title,
-          style: const TextStyle(
-            color: Colors.black87,
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          textAlign: TextAlign.center,
-          subtitle,
-          style: const TextStyle(
-            color: Colors.black45,
-            fontSize: 13,
-            height: 1.35,
-          ),
-        ),
-      ],
     );
   }
 }
